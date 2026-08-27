@@ -11,28 +11,43 @@
   <div class="container">
     <a href="/">← back</a>
     <h2>Stealth & AI System</h2>
-    <p class="tagline">Sensing cones, alert levels, noise propagation, and patrol graphs for NPCs.</p>
+    <p class="tagline">Sensing cones, alert levels, noise propagation, patrol graphs and scalable agent coordination.</p>
 
     <section>
-      <h3>Key features</h3>
+      <h3>Overview</h3>
+      <p>This system models sight and hearing for NPCs, with layered alert states and propagation between nearby agents. It is designed to scale from a handful of NPCs to dozens by using cheap preliminary checks and only running expensive line-of-sight checks when necessary.</p>
+    </section>
+
+    <section>
+      <h3>Architecture</h3>
+      <ol>
+        <li>Per-agent sensing: cheap range checks followed by cone checks</li>
+        <li>Line-of-sight gate: only when cone/range indicate possible detection</li>
+        <li>Alert propagation: local area notifications (radius-based) to nearby agents</li>
+        <li>Patrol graph: waypoint sequences with interruptible behaviors</li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Scalability & Optimization</h3>
       <ul>
-        <li>Line-of-sight and hearing checks</li>
-        <li>Alert propagation between agents</li>
-        <li>Patrol waypoints with interruptions</li>
+        <li>Use spatial partitioning (quad/octrees or Roblox CollectionService tags with region checks) to limit pairwise checks.</li>
+        <li>Run expensive checks (raycasts) at staggered intervals across NPCs to avoid frame spikes.</li>
+        <li>Cache recent LOS results for short windows to reduce repeated raycasts.</li>
       </ul>
     </section>
 
     <section>
       <h3>Example snippet (sensing cone)</h3>
-      <pre><code class="language-lua">-- check if player is in sensing cone
+      <pre><code class="language-lua">-- check if target is within sensing cone
 local function inSensingCone(agentPos, agentLook, targetPos, angleDeg, range)
   local dir = (targetPos - agentPos)
   if dir.Magnitude > range then return false end
   local dot = agentLook.Unit:Dot(dir.Unit)
-  local ang = math.deg(math.acos(dot))
+  local ang = math.deg(math.acos(math.clamp(dot, -1, 1)))
   return ang <= angleDeg/2
-end</code></pre>
-
+end
+</code></pre>
     </section>
 
     <section>

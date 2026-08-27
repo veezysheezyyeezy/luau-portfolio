@@ -11,14 +11,28 @@
   <div class="container">
     <a href="/">← back</a>
     <h2>Parkour / Movement System</h2>
-    <p class="tagline">Ledge detection, vaults, root-motion blending, and smooth transitions between states.</p>
+    <p class="tagline">Ledge detection, vaulting, root-motion blending, and animation hooks for smooth parkour movement.</p>
 
     <section>
-      <h3>Key features</h3>
+      <h3>Overview</h3>
+      <p>Parkour focuses on movement feel and robust detection. Ledge detection, vaults, and wall interactions are implemented with careful checks to avoid accidental triggers and provide predictable animation timing.</p>
+    </section>
+
+    <section>
+      <h3>Architecture</h3>
+      <ol>
+        <li>Contact detection: forward checks then downward samples for ledges</li>
+        <li>Movement state machine: walking, running, jumping, wall-run, ledge-hang, vault</li>
+        <li>Animation blending hooks: use event triggers to synchronize root-motion clips</li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Robustness & Tuning</h3>
       <ul>
-        <li>Ledge detection and auto-vault</li>
-        <li>Movement state machine: run, jump, wall-run, ledge-hang</li>
-        <li>Animation blending hooks for Studio</li>
+        <li>Use small hysteresis windows to prevent flicker between states (e.g., ledge enter/exit).</li>
+        <li>Run collision checks at consistent intervals and prefer ray/box checks over per-frame physics where possible.</li>
+        <li>Tune animation lengths to match detection windows and use transition blending to hide corrections.</li>
       </ul>
     </section>
 
@@ -36,8 +50,8 @@ local function findLedge(origin, forwardDir, forwardDist, downDist)
     return groundPos
   end
   return nil
-end</code></pre>
-
+end
+</code></pre>
     </section>
 
     <section>

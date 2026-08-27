@@ -11,15 +11,52 @@
   <div class="container">
     <a href="/">← back</a>
     <h2>Advanced Combat System</h2>
-    <p class="tagline">Server-authoritative hits, combo system, predictive client animation, and AI reaction states.</p>
+    <p class="tagline">Server-authoritative hits, combo system, prediction for visuals, and AI reaction states.</p>
 
     <section>
-      <h3>Key features</h3>
+      <h3>Overview</h3>
+      <p>This combat system balances responsiveness with security. Clients predict animations and sound immediately for player feel; the server validates hits and resolves damage to prevent cheating. The example code demonstrates a clear separation between client-only visual prediction and server-side authoritative logic.</p>
+    </section>
+
+    <section>
+      <h3>Architecture</h3>
+      <ol>
+        <li>Client Input Layer — records inputs and plays local animation (non-authoritative).</li>
+        <li>Prediction Layer — client-side animation/visual prediction to hide latency.</li>
+        <li>Server Validation Layer — receives attack events, runs raycasts and timestamp checks, applies damage.</li>
+        <li>State Manager — manages stagger, block, invulnerability windows, and animation tags.</li>
+        <li>AI Integration — enemies respond to events (damage, player proximity) through a simple state machine.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Security & Networking Notes</h3>
       <ul>
-        <li>Hit validation on server (ray checks + timestamp tolerances)</li>
-        <li>Combo windows and input buffering</li>
-        <li>Damage falloff, blocking, and stagger states</li>
-        <li>Simple AI for enemies with attack/evade/state machine</li>
+        <li>Always validate hits on the server: use authoritative raycasts and check reported timestamps against server time (with tolerance).</li>
+        <li>Use short input buffers on client for combos, but send explicit inputs to server for validation before permanently applying effects.</li>
+        <li>Prevent teleport/exploit by checking distances and ensuring hit positions are near the target's current server position.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>API Surface (recommended)</h3>
+      <pre><code class="language-lua">-- Server API
+Combat:RegisterAttack(player, attackData) -- attackData includes timestamp, animationTag, hitTrace
+Combat:ValidateHit(attacker, targetId, hitPos, timestamp) -> boolean
+Combat:ApplyDamage(target, amount, hitType)
+
+-- Client API
+Combat:PlayLocalAnimation(player, animationTag)
+Combat:QueueComboInput(player, inputName)
+</code></pre>
+    </section>
+
+    <section>
+      <h3>Testing & Performance</h3>
+      <ul>
+        <li>Unit test server validation logic with mocked positions and timestamps.</li>
+        <li>Stress test with multiple concurrent attacks and high player counts to ensure server raycasts scale (consider spatial partitioning).</li>
+        <li>Profile the server for raycast-heavy bursts; use simplified area checks where precise raycasts aren't necessary.</li>
       </ul>
     </section>
 
@@ -27,15 +64,16 @@
       <h3>Example snippet (server-side hit validation)</h3>
       <pre><code class="language-lua">-- server: validate hit from client
 local function validateHit(attacker, targetId, reportedPosition, timestamp)
-  -- basic checks: recent timestamp, distance limits
+  -- Accept small clock skew (e.g., 2s) but reject stale/teleport attempts
   if math.abs(os.time() - timestamp) > 2 then return false end
   local target = workspace:FindFirstChild(targetId)
   if not target then return false end
 
-  -- perform a server-side ray/region check to ensure attack reaches target
+  -- server-side trace to validate reachability
   local origin = attacker.Character.Head.Position
-  local direction = (reportedPosition - origin).Unit * 10
-  local ray = Ray.new(origin, direction)
+  local direction = (reportedPosition - origin)
+  if direction.Magnitude > 12 then return false end -- max reach
+  local ray = Ray.new(origin, direction.Unit * direction.Magnitude)
   local hitPart, hitPos = workspace:FindPartOnRay(ray, attacker.Character)
   if hitPart and hitPart:IsDescendantOf(target) then
     return true
@@ -52,7 +90,7 @@ end</code></pre>
 
     <section>
       <h3>Notes</h3>
-      <p class="note">Keep authoritative checks server-side. Use client prediction only for visuals and cancel if server disagrees to prevent exploitation.</p>
+      <p class="note">Design trade-offs: increasing server checks improves security but adds CPU cost. Use hybrid checks (quick distance + region checks) to minimize raycasts while keeping security.</p>
     </section>
 
   </div>

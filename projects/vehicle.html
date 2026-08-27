@@ -11,27 +11,42 @@
   <div class="container">
     <a href="/">← back</a>
     <h2>Vehicle / Driving System</h2>
-    <p class="tagline">Wheel physics approximation, suspension, drift, and networked input smoothing.</p>
+    <p class="tagline">Wheel traction, suspension approximation, drift, and network smoothing for vehicles.</p>
 
     <section>
-      <h3>Key features</h3>
+      <h3>Overview</h3>
+      <p>This vehicle system provides believable arcade-style driving with per-wheel forces, simple suspension, and drift behavior. It prioritizes stable visuals on the client while using server snapshots for authoritative state.</p>
+    </section>
+
+    <section>
+      <h3>Architecture</h3>
+      <ol>
+        <li>Per-wheel physics helpers (traction, slip, lateral force)</li>
+        <li>Suspension spring-damper model per wheel</li>
+        <li>Server reconciliation for position/velocity snapshots</li>
+        <li>Client-side visual smoothing and wheel rotation interpolation</li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Network & Security</h3>
       <ul>
-        <li>Per-wheel traction and skid damping</li>
-        <li>Suspension spring/damper approximation</li>
-        <li>Client-side visual smoothing and server reconciliation</li>
+        <li>Transmit only compact state: position, linearVelocity, angularVelocity, steeringAngle.</li>
+        <li>Run lightweight server-side checks for impossible velocities/teleports.</li>
+        <li>For authoritative servers, re-simulate a small window of inputs to validate sudden changes.</li>
       </ul>
     </section>
 
     <section>
-      <h3>Example snippet (simple suspension)</h3>
+      <h3>Example snippet (suspension)</h3>
       <pre><code class="language-lua">-- per-wheel spring force
 local function suspensionForce(restLength, currentLength, springK, damperC, relativeVelocity)
   local displacement = restLength - currentLength
   local spring = springK * displacement
   local damper = damperC * -relativeVelocity
   return spring + damper
-end</code></pre>
-
+end
+</code></pre>
     </section>
 
     <section>

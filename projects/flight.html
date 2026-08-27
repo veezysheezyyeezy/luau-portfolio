@@ -11,27 +11,63 @@
   <div class="container">
     <a href="/">← back</a>
     <h2>Flight System</h2>
-    <p class="tagline">Client prediction, smooth damping, input smoothing, and camera follow improvements.</p>
+    <p class="tagline">Client prediction, input smoothing, lift/drag approximations, and camera follow behavior for a smooth flying experience.</p>
 
     <section>
-      <h3>Key features</h3>
+      <h3>Overview</h3>
+      <p>The flight system focuses on player feel: low input latency, smooth transitions, and believable arcade-like aerodynamics. Networking uses prediction on the client and reconciliation from the server to correct drift.</p>
+    </section>
+
+    <section>
+      <h3>Architecture</h3>
+      <ol>
+        <li>Input smoothing & deadzone handling to reduce jitter</li>
+        <li>Client-side physics simulation for immediate response</li>
+        <li>Server-side authoritative simulation at lower frequency for final position/state</li>
+        <li>Reconciliation logic to apply authoritative corrections smoothly</li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Networking Patterns</h3>
       <ul>
-        <li>Input smoothing to avoid jitter</li>
-        <li>Client-side movement prediction with server reconciliation</li>
-        <li>Lift/drag approximation for arcade-style flight</li>
+        <li>Send compact state snapshots (position, velocity, angularVelocity) at a steady rate.</li>
+        <li>On client: predict movement locally using inputs; buffer recent inputs for re-simulation when server snapshot arrives.</li>
+        <li>When reconciling, smoothly blend the visual position to the server-corrected position to avoid teleportation.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>API Surface</h3>
+      <pre><code class="language-lua">-- Client
+Flight:SendInput(player, rawInput) -- rawInput: Vector3 throttle/strafe
+Flight:Predict(dt)
+
+-- Server
+Flight:ReceiveInput(playerId, inputSnapshot)
+Flight:SimulateServer(dt) -- lower-frequency authoritative sim
+</code></pre>
+    </section>
+
+    <section>
+      <h3>Performance & Tuning</h3>
+      <ul>
+        <li>Keep client simulation stable at variable dt — use semi-implicit integration.</li>
+        <li>Limit physics substeps on server to a reasonable rate (e.g., 30 Hz) and interpolate between snapshots.</li>
+        <li>Use deadzones and exponential smoothing for stick inputs to improve feel.</li>
       </ul>
     </section>
 
     <section>
       <h3>Example snippet (input smoothing)</h3>
-      <pre><code class="language-lua">-- simple exponential smoothing for stick input
-local alpha = 0.12 -- smoothing factor
-local smoothed = Vector3.new()
+      <pre><code class="language-lua">-- exponential smoothing
+local alpha = 0.12 -- smoothing factor (smaller = smoother)
+local smoothed = Vector3.new(0,0,0)
 function smoothInput(raw)
   smoothed = smoothed:Lerp(raw, alpha)
   return smoothed
-end</code></pre>
-
+end
+</code></pre>
     </section>
 
     <section>

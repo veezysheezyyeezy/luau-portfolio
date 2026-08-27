@@ -11,7 +11,7 @@
   <header class="site-header">
     <div class="container">
       <h1>Luau Systems — Portfolio</h1>
-      <p class="tagline">Advanced Luau systems and sample code — Combat, Flight, AI, Vehicles, Parkour.</p>
+      <p class="tagline">Advanced Luau systems and annotated code — Combat, Flight, AI, Vehicles, Parkour.</p>
       <nav>
         <a href="/">Home</a>
         <a href="/projects/combat.html">Combat</a>
@@ -27,52 +27,64 @@
   <main class="container">
     <section class="intro">
       <h2>Hello — I'm veezysheezyyeezy</h2>
-      <p>Welcome to a showcase of advanced Luau systems. Each project page contains architecture notes, key features, a downloadable example file, and short annotated code snippets you can open in Roblox Studio.</p>
-      <p class="note">Theme: hacker — green on black. Use the repo's code/ folder to download example systems.</p>
+      <p>Welcome to a technical portfolio of advanced Luau systems. Each project page dives into architecture, trade-offs, networking, security considerations, and includes annotated example code you can drop into Roblox Studio.</p>
+
+      <h3>What you'll find</h3>
+      <ul>
+        <li>Design notes and API surfaces for each system</li>
+        <li>Security & networking guidance (server authoritative checks, prediction, reconciliation)</li>
+        <li>Annotated sample code in the <code>/code</code> folder that you can use or extend</li>
+        <li>Performance tips and testing advice</li>
+      </ul>
+
+      <p class="note">Theme: hacker (neon green on black). Replace the placeholder assets in /assets/ with your own screenshots or GIFs when ready.</p>
     </section>
 
     <section class="projects-grid">
       <article class="card">
         <img src="/assets/combat.svg" alt="Combat system screenshot">
         <h3><a href="/projects/combat.html">Advanced Combat System</a></h3>
-        <p>Stateful AI, combo detection, hit validation, server/client separation.</p>
+        <p>Server-authoritative hit validation, combo system, stagger/block, and AI reaction states. Includes security notes and test cases.</p>
       </article>
 
       <article class="card">
         <img src="/assets/flight.svg" alt="Flight system screenshot">
         <h3><a href="/projects/flight.html">Flight System</a></h3>
-        <p>Smooth physics, input smoothing, client-side prediction, camera integration.</p>
+        <p>Client-side smoothing, prediction, lift/drag approximations, and camera behavior. Reconciliation patterns included.</p>
       </article>
 
       <article class="card">
         <img src="/assets/stealth.svg" alt="Stealth system screenshot">
         <h3><a href="/projects/stealth.html">Stealth & AI</a></h3>
-        <p>Sensing cones, alert states, noise propagation and patrol graphs.</p>
+        <p>Sensing cones, noise propagation, layered alert states, patrol graphs and scalability notes for many agents.</p>
       </article>
 
       <article class="card">
         <img src="/assets/vehicle.svg" alt="Vehicle system screenshot">
         <h3><a href="/projects/vehicle.html">Vehicle / Driving</a></h3>
-        <p>Wheel physics, suspension approximation, drift and network sync.</p>
+        <p>Per-wheel traction, suspension approximation, drift behavior, and networked interpolation strategies.</p>
       </article>
 
       <article class="card">
         <img src="/assets/parkour.svg" alt="Parkour system screenshot">
         <h3><a href="/projects/parkour.html">Parkour / Movement</a></h3>
-        <p>Root motion blending, ledge detection, animation smoothing, wall-running.</p>
+        <p>Ledge detection, root-motion blending hooks, smooth transitions and animation sync guidance.</p>
       </article>
     </section>
 
     <section class="contact">
       <h2>Get the code</h2>
-      <p>All example files are in the <code>/code</code> folder in this repository. Fork the repo or download individual files to open in Studio.</p>
+      <p>All example files live in <code>/code</code>. Clone the repo or download single files to open in Studio. For live demos, replace the placeholders in <code>/assets</code> with your recordings.</p>
+
+      <h3>Pages & custom domain</h3>
+      <p>I can add a <code>CNAME</code> file for a custom domain once you provide it. To publish the site you'll still need to enable GitHub Pages in the repo Settings → Pages (choose branch: <strong>main</strong>, folder: <strong>/ (root)</strong>). I can't toggle Pages from this session, but I can do everything else and guide DNS steps.</p>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="container">
-      <p>Built for <strong>veezysheezyyeezy</strong> — Luau systems portfolio • MIT License</p>
-      <p class="small">Note: images are placeholders. Replace assets in /assets/ with your screenshots or GIFs.</p>
+      <p>Built for <strong>veezysheezyyeezy</strong> — Luau Systems Portfolio • MIT License</p>
+      <p class="small">Images are placeholders. Replace assets in /assets/ or tell me to upload them when you have them.</p>
     </div>
   </footer>
 
