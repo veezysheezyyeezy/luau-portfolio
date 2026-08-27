@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Vehicle System — Luau</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="hacker">
+  <div class="container">
+    <a href="/">← back</a>
+    <h2>Vehicle / Driving System</h2>
+    <p class="tagline">Wheel physics approximation, suspension, drift, and networked input smoothing.</p>
+
+    <section>
+      <h3>Key features</h3>
+      <ul>
+        <li>Per-wheel traction and skid damping</li>
+        <li>Suspension spring/damper approximation</li>
+        <li>Client-side visual smoothing and server reconciliation</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Example snippet (simple suspension)</h3>
+      <pre><code class="language-lua">-- per-wheel spring force
+local function suspensionForce(restLength, currentLength, springK, damperC, relativeVelocity)
+  local displacement = restLength - currentLength
+  local spring = springK * displacement
+  local damper = damperC * -relativeVelocity
+  return spring + damper
+end</code></pre>
+
+    </section>
+
+    <section>
+      <h3>Download</h3>
+      <p>Example file: <a href="/code/vehicle.lua" download>code/vehicle.lua</a></p>
+    </section>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+</body>
+</html>

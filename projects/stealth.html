@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Stealth & AI — Luau</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="hacker">
+  <div class="container">
+    <a href="/">← back</a>
+    <h2>Stealth & AI System</h2>
+    <p class="tagline">Sensing cones, alert levels, noise propagation, and patrol graphs for NPCs.</p>
+
+    <section>
+      <h3>Key features</h3>
+      <ul>
+        <li>Line-of-sight and hearing checks</li>
+        <li>Alert propagation between agents</li>
+        <li>Patrol waypoints with interruptions</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Example snippet (sensing cone)</h3>
+      <pre><code class="language-lua">-- check if player is in sensing cone
+local function inSensingCone(agentPos, agentLook, targetPos, angleDeg, range)
+  local dir = (targetPos - agentPos)
+  if dir.Magnitude > range then return false end
+  local dot = agentLook.Unit:Dot(dir.Unit)
+  local ang = math.deg(math.acos(dot))
+  return ang <= angleDeg/2
+end</code></pre>
+
+    </section>
+
+    <section>
+      <h3>Download</h3>
+      <p>Example file: <a href="/code/stealth.lua" download>code/stealth.lua</a></p>
+    </section>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+</body>
+</html>

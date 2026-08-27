@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Parkour / Movement — Luau</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="hacker">
+  <div class="container">
+    <a href="/">← back</a>
+    <h2>Parkour / Movement System</h2>
+    <p class="tagline">Ledge detection, vaults, root-motion blending, and smooth transitions between states.</p>
+
+    <section>
+      <h3>Key features</h3>
+      <ul>
+        <li>Ledge detection and auto-vault</li>
+        <li>Movement state machine: run, jump, wall-run, ledge-hang</li>
+        <li>Animation blending hooks for Studio</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Example snippet (ledge detection)</h3>
+      <pre><code class="language-lua">-- cast forward then down to find ledge point
+local function findLedge(origin, forwardDir, forwardDist, downDist)
+  local forwardRay = Ray.new(origin, forwardDir.Unit * forwardDist)
+  local hitPart, hitPos = workspace:FindPartOnRay(forwardRay)
+  if not hitPart then return nil end
+  local downStart = hitPos + Vector3.new(0,1,0)
+  local downRay = Ray.new(downStart, Vector3.new(0,-1,0) * downDist)
+  local groundPart, groundPos = workspace:FindPartOnRay(downRay)
+  if groundPart then
+    return groundPos
+  end
+  return nil
+end</code></pre>
+
+    </section>
+
+    <section>
+      <h3>Download</h3>
+      <p>Example file: <a href="/code/parkour.lua" download>code/parkour.lua</a></p>
+    </section>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+</body>
+</html>

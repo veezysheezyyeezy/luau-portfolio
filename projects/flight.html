@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Flight System — Luau</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="hacker">
+  <div class="container">
+    <a href="/">← back</a>
+    <h2>Flight System</h2>
+    <p class="tagline">Client prediction, smooth damping, input smoothing, and camera follow improvements.</p>
+
+    <section>
+      <h3>Key features</h3>
+      <ul>
+        <li>Input smoothing to avoid jitter</li>
+        <li>Client-side movement prediction with server reconciliation</li>
+        <li>Lift/drag approximation for arcade-style flight</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Example snippet (input smoothing)</h3>
+      <pre><code class="language-lua">-- simple exponential smoothing for stick input
+local alpha = 0.12 -- smoothing factor
+local smoothed = Vector3.new()
+function smoothInput(raw)
+  smoothed = smoothed:Lerp(raw, alpha)
+  return smoothed
+end</code></pre>
+
+    </section>
+
+    <section>
+      <h3>Download</h3>
+      <p>Example file: <a href="/code/flight.lua" download>code/flight.lua</a></p>
+    </section>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+</body>
+</html>

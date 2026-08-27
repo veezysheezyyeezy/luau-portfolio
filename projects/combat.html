@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Advanced Combat System — Luau</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="hacker">
+  <div class="container">
+    <a href="/">← back</a>
+    <h2>Advanced Combat System</h2>
+    <p class="tagline">Server-authoritative hits, combo system, predictive client animation, and AI reaction states.</p>
+
+    <section>
+      <h3>Key features</h3>
+      <ul>
+        <li>Hit validation on server (ray checks + timestamp tolerances)</li>
+        <li>Combo windows and input buffering</li>
+        <li>Damage falloff, blocking, and stagger states</li>
+        <li>Simple AI for enemies with attack/evade/state machine</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Example snippet (server-side hit validation)</h3>
+      <pre><code class="language-lua">-- server: validate hit from client
+local function validateHit(attacker, targetId, reportedPosition, timestamp)
+  -- basic checks: recent timestamp, distance limits
+  if math.abs(os.time() - timestamp) > 2 then return false end
+  local target = workspace:FindFirstChild(targetId)
+  if not target then return false end
+
+  -- perform a server-side ray/region check to ensure attack reaches target
+  local origin = attacker.Character.Head.Position
+  local direction = (reportedPosition - origin).Unit * 10
+  local ray = Ray.new(origin, direction)
+  local hitPart, hitPos = workspace:FindPartOnRay(ray, attacker.Character)
+  if hitPart and hitPart:IsDescendantOf(target) then
+    return true
+  end
+  return false
+end</code></pre>
+
+    </section>
+
+    <section>
+      <h3>Download</h3>
+      <p>Example file: <a href="/code/combat.lua" download>code/combat.lua</a></p>
+    </section>
+
+    <section>
+      <h3>Notes</h3>
+      <p class="note">Keep authoritative checks server-side. Use client prediction only for visuals and cancel if server disagrees to prevent exploitation.</p>
+    </section>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+</body>
+</html>
